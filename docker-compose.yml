@@ -3,6 +3,13 @@ services:
     build: .
     volumes:
       - .:/app
+    working_dir: /app
+    environment:                      
+      MYSQL_HOST: mysql
+      MYSQL_DB_NAME: mydb
+      DB_USERNAME: user
+      DB_PASSWORD: pass
+      MONGODB_HOST: mongo
     depends_on:
       - mysql
       - mongo

@@ -7,6 +7,8 @@ import os
 from dotenv import load_dotenv
 import mysql.connector
 from models.user import User
+from mysql.connector import Error
+
 
 class UserDAO:
     def __init__(self):
@@ -55,3 +57,36 @@ class UserDAO:
     def close(self):
         self.cursor.close()
         self.conn.close()
+
+    def update(self, user):
+        """
+        Met à jour name/email d'un utilisateur par son id.
+        Retourne True si exactement une ligne a été modifiée.
+        """
+        try:
+            sql = """
+                UPDATE users
+                   SET name = %s,
+                       email = %s
+                 WHERE id = %s
+            """
+            self.cursor.execute(sql, (user.name, user.email, user.id))
+            self.conn.commit()
+            return self.cursor.rowcount == 1
+        except Error:
+            self.conn.rollback()
+            return False
+
+    def delete(self, user_id: int):
+        """
+        Supprime un utilisateur par id.
+        Retourne True si exactement une ligne a été supprimée.
+        """
+        try:
+            sql = "DELETE FROM users WHERE id = %s"
+            self.cursor.execute(sql, (user_id,))
+            self.conn.commit()
+            return self.cursor.rowcount == 1
+        except Error:
+            self.conn.rollback()
+            return False

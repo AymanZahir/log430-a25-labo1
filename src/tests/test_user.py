@@ -1,4 +1,4 @@
-from daos.user_dao import UserDAO
+from daos.user_dao_mongo import UserDAOMongo as UserDAO
 from models.user import User
 
 dao = UserDAO()
